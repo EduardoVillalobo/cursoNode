@@ -16,3 +16,5 @@ const sequelize = new Sequelize('uptasknode', 'root', '', {
         idle: 10000
     }
 })
+
+module.exports = sequelize

@@ -1,21 +1,26 @@
 const { response } = require("express")
+const Proyecto = require('../models/Proyectos')
 
-exports.proyectosHome = (request, response) => {
+
+exports.proyectosHome = async (request, response) => {
+    const proyectos = await Proyecto.findAll()
     response.render("index", {
-        nombrePagina: 'Proyectos'
+        nombrePagina: 'Proyectos',
+        proyectos
     })
 }
 
-exports.formularioProyecto = (req, res) => {
+exports.formularioProyecto = async (req, res) => {
+    const proyectos = await Proyecto.findAll()
     res.render("nuevoProyecto", {
-        nombrePagina: 'Nuevo Proyecto'
+        nombrePagina: 'Nuevo Proyecto',
+        proyectos
     })
 }
 
-exports.nuevoProyecto = (req, res) => {
-    /* console.log(req.body) */
-
-    //Valir el input
+exports.nuevoProyecto = async (req, res) => {    
+    const proyectos = await Proyecto.findAll()
+    //Valir el input con deconstruction
     const { nombre } = req.body
     let errores = [];
 
@@ -27,9 +32,30 @@ exports.nuevoProyecto = (req, res) => {
     if (errores.length > 0) {
         res.render('nuevoProyecto', {
             nombrePagina: 'Nuevo Proyecto',
-            errores
+            errores,
+            proyectos
         })
     } else {
         //Insertar en la BD
+        const proyecto = await Proyecto.create({nombre})
+        res.redirect('/')
     }
+}
+
+exports.proyectoporURL = async (req, res, next) => {
+    const proyectos = await Proyecto.findAll()
+    const proyecto = await Proyecto.findOne({
+        where:{
+            url: req.params.url
+        }
+    })
+
+    if(!proyecto) return next()
+
+    res.render("tareas",{
+            nombrePagina: "Tareas del proyecto",
+            proyecto,
+            proyectos
+        })
+
 }
