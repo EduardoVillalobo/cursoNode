@@ -295,6 +295,9 @@ body.index {
     max-width: 300px;
     margin: 0 auto 1rem auto;
     text-transform: uppercase;
+    border: solid red;
+    background-color: #ff8989;
+    color: red
 }
 
 .error {
@@ -392,6 +395,7 @@ form input[type="submit"] {
 
 .contenedor-acciones .boton.eliminar {
     color: white;
+    width: auto;
 }
 
 .contenedor-acciones .boton {

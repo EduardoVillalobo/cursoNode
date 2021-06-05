@@ -12,10 +12,11 @@ const db = require('./config/db')
 
 //Importar el modelo para crear las tablas si no existen
 require('./models/Proyectos')
+require('./models/Tareas')
 
 db.sync()
-    .then(()=>console.log('Conectado a la base de datos'))
-    .catch(error=>console.log(error))
+    .then(() => console.log('Conectado a la base de datos'))
+    .catch(error => console.log(error))
 
 //Crear la app de express
 const app = express()
