@@ -3,16 +3,29 @@ const Proyecto = require('../models/Proyectos')
 const Tareas = require('../models/Tareas')
 
 
-exports.proyectosHome = async(request, response) => {
-    const proyectos = await Proyecto.findAll()
-    response.render("index", {
+exports.proyectosHome = async(req, res) => {
+
+    const usuarioId = res.locals.usuario.id
+
+    const proyectos = await Proyecto.findAll({
+        where: {
+            usuarioId
+        }
+    })
+
+    res.render("index", {
         nombrePagina: 'Proyectos',
         proyectos
     })
 }
 
 exports.formularioProyecto = async(req, res) => {
-    const proyectos = await Proyecto.findAll()
+    const usuarioId = res.locals.usuario.id
+    const proyectos = await Proyecto.findAll({
+        where: {
+            usuarioId
+        }
+    })
     res.render("nuevoProyecto", {
         nombrePagina: 'Nuevo Proyecto',
         proyectos
@@ -20,7 +33,12 @@ exports.formularioProyecto = async(req, res) => {
 }
 
 exports.nuevoProyecto = async(req, res) => {
-    const proyectos = await Proyecto.findAll()
+    const usuarioId = res.locals.usuario.id
+    const proyectos = await Proyecto.findAll({
+            where: {
+                usuarioId
+            }
+        })
         //Valir el input con deconstruction
     const { nombre } = req.body
     let errores = [];
@@ -38,18 +56,24 @@ exports.nuevoProyecto = async(req, res) => {
         })
     } else {
         //Insertar en la BD
-        await Proyecto.create({ nombre })
+        const usuarioId = res.locals.usuario.id
+        await Proyecto.create({ nombre, usuarioId })
         res.redirect('/')
     }
 }
 
 exports.proyectoporURL = async(req, res, next) => {
-
-    const proyectospromise = Proyecto.findAll()
+    const usuarioId = res.locals.usuario.id
+    const proyectospromise = Proyecto.findAll({
+        where: {
+            usuarioId
+        }
+    })
 
     const proyectopromise = Proyecto.findOne({
         where: {
-            url: req.params.url
+            url: req.params.url,
+            usuarioId
         }
     })
 
@@ -78,12 +102,17 @@ exports.proyectoporURL = async(req, res, next) => {
 }
 
 exports.formularioEditar = async(req, res, next) => {
-
-    const proyectospromise = Proyecto.findAll()
+    const usuarioId = res.locals.usuario.id
+    const proyectospromise = Proyecto.findAll({
+        where: {
+            usuarioId
+        }
+    })
 
     const proyectopromise = Proyecto.findOne({
         where: {
-            id: req.params.id
+            id: req.params.id,
+            usuarioId
         }
     })
 
@@ -97,8 +126,12 @@ exports.formularioEditar = async(req, res, next) => {
 }
 
 exports.actualizarProyecto = async(req, res) => {
-
-    const proyectos = await Proyecto.findAll()
+    const usuarioId = res.locals.usuario.id
+    const proyectos = await Proyecto.findAll({
+            where: {
+                usuarioId
+            }
+        })
         //Valir el input con deconstruction
     const { nombre } = req.body
     let errores = [];
